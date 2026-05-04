@@ -1,97 +1,108 @@
-# Meridian Public Library — Catalog System
+# Meridian Library
 
-A multi-page static library management system built with vanilla HTML, CSS, and JavaScript. Designed for direct deployment to GitHub Pages — no build step, no dependencies.
+A static, multi-page library management system that runs entirely in the browser — no backend, no build step, no frameworks.
 
-## Demo accounts
+**Live demo:** https://jessupthefish.github.io/
 
-| Username | Password    | Role   | Notes                                           |
-|----------|-------------|--------|-------------------------------------------------|
-| `admin`  | `admin123`  | Admin  | Can add, edit, delete books; mark items returned |
-| `patron` | `patron123` | Patron | Can borrow available books and return their own  |
+## Overview
 
-Click a credential row on the login screen to autofill.
+Meridian Library is a small but complete circulation system. A librarian (admin) can add, edit, and remove books from the catalog and force-return checked-out items. A patron can browse and search the catalog, borrow available books, and return books they've borrowed. The dashboard surfaces overdue items and books due in the next several days.
 
-## Pages
+The project is implemented with vanilla HTML, CSS, and JavaScript. State persists in `localStorage`; auth is mocked with two seeded accounts.
 
-```
-index.html      Dashboard       — stats and reminders (role-aware)
-catalog.html    Catalog         — search, filter, list, add (admin)
-book.html       Book detail     — view, edit, delete, borrow, return
-login.html      Sign in         — mock authentication
-```
+## Demo credentials
 
-All non-login pages bounce to the login page if no session is active.
+| Role    | Username | Password    |
+|---------|----------|-------------|
+| Admin   | `admin`  | `admin123`  |
+| Patron  | `patron` | `patron123` |
+
+The login screen has one-click autofill for either account.
 
 ## Features
 
-### Core (required)
-- ✅ **Add a book** — Inline form on the catalog page (admin only) with title, author, ISBN, genre, publication year, and availability.
-- ✅ **Edit a book** — Pre-populated form on `book.html` (admin only); validates ISBN and year.
-- ✅ **Delete a book** — Confirmation dialog with the book's title. Available from both the catalog row actions and the detail page.
-- ✅ **Search & filter** — Real-time text search across title, author, and ISBN. Genre filter, availability filter, and six sort options.
-- ✅ **Book detail view** — Dedicated page per book with full metadata and loan status panel.
+**Catalog**
+- Search across title, author, and ISBN
+- Filter by genre and availability
+- Sort by title, author, or year
+- Add, edit, and delete books (admin)
+- Per-book detail view
 
-### Stretch goals (all implemented)
-- ✅ **Mock authentication** — Hardcoded admin and patron accounts in `js/data.js`. Session in `sessionStorage`. Role gates control which actions are visible.
-- ✅ **Borrow / return workflow** — Patrons borrow available books (14-day loan period); they can return their own. Admins can force-return any book.
-- ✅ **Due-date reminders** — Dashboard surfaces overdue and soon-due items with color-coded badges. Catalog table shows a status badge that escalates from "Available" → "Checked out" → "Due in N days" → "Overdue · Nd".
+**Role-based access**
+- *Admin:* full CRUD plus the ability to force-return any checked-out book
+- *Patron:* browse, borrow available books, return books they've borrowed
 
-## File structure
+**Borrow / return workflow**
+- Borrowing sets a 14-day due date
+- Status badges escalate: *Available* → *Checked out* → *Due in N days* → *Due tomorrow* → *Overdue · N days*
+- Returning clears the borrower and due date
+
+**Dashboard**
+- Live counts of total, available, and checked-out books
+- Reminders panel showing overdue and due-soon items, scoped to the viewer's role: admin sees the whole library, patron sees only their own loans
+
+## Tech stack
+
+- HTML5, CSS3, ES2017 JavaScript
+- No frameworks, no build step, no runtime dependencies except web fonts
+- `localStorage` for the book collection (key: `meridian.library.books.v1`)
+- `sessionStorage` for the auth session (key: `meridian.library.session.v1`)
+- Hosted on GitHub Pages
+
+## Architecture
+
+The site is four pages sharing a common navigation bar and a small library of script modules attached to a global `Meridian` namespace.
 
 ```
-library-system/
-├── index.html              Dashboard page
-├── catalog.html            Catalog browse/search page
-├── book.html               Book detail / edit page
-├── login.html              Login page
-├── README.md               This file
-│
-├── css/
-│   ├── base.css            Design tokens, reset, typography, page frame
-│   ├── layout.css          Top navigation, grid systems
-│   └── components.css      Buttons, forms, tables, badges, modals, toasts
-│
-└── js/
-    ├── data.js             Seed data: 25 books, 2 user accounts, genre list
-    ├── store.js            LibraryStore — CRUD with localStorage persistence
-    ├── auth.js             AuthService — mock login / logout / role checks
-    ├── ui.js               Shared UI helpers (toasts, dialogs, formatting)
-    ├── nav.js              Injects shared navigation on every page
-    ├── login.js            Login page logic
-    ├── dashboard.js        Dashboard rendering
-    ├── catalog.js          Catalog table, filters, add-book form
-    └── book.js             Book detail view, edit form, borrow/return
+index.html        Dashboard
+catalog.html      Browse / search / filter / add
+book.html         Detail view, edit, borrow, return
+login.html        Mock auth
+
+css/
+  base.css        Design tokens, typography, page frame
+  layout.css      Top nav, grid systems
+  components.css  Buttons, forms, tables, badges, modals, toasts
+
+js/
+  data.js         Seed data — 25 books, 2 accounts, genre list
+  store.js        LibraryStore — CRUD, borrow/return, stats, persistence
+  auth.js         AuthService — login/logout, role checks, route guards
+  ui.js           Toast, confirm dialog, date helpers, status badges
+  nav.js          Shared navigation injection and auth gate
+  dashboard.js    Page controller — index.html
+  catalog.js      Page controller — catalog.html
+  book.js         Page controller — book.html
+  login.js        Page controller — login.html
 ```
 
-## Data persistence
-
-Books are persisted to `localStorage` under the key `meridian.library.books.v1`. Edits, additions, deletions, and borrow/return actions all survive a page refresh. The dashboard footer has a **Reset demo data** link to restore the original 25-book seed.
-
-The auth session lives in `sessionStorage` (cleared when the browser closes), which is appropriate for a shared library workstation.
+Each page loads only the modules it needs. The store and auth modules are pure data layers — they expose methods and never touch the DOM. UI modules read from them and render. This keeps page controllers thin and the data layer trivially swappable for a real backend later.
 
 ## Design notes
 
-- **Type pairing:** [Fraunces](https://fonts.google.com/specimen/Fraunces) (display serif, used at high optical-size for the wordmark and headings) + [IBM Plex Sans](https://fonts.google.com/specimen/IBM+Plex+Sans) (UI body) + IBM Plex Mono (ISBNs and other technical metadata).
-- **Palette:** Warm cream paper (`#f4ede0`) ground with deep oxblood (`#7a2e2e`) as the single accent. Status colors are muted variants of green, amber, and red — never saturated.
-- **Layout:** Generous whitespace, hairline borders, restrained shadows. Tables use uppercase tracked-out headings reminiscent of card catalogs.
-- **Responsive:** The catalog table collapses to stacked cards under 720px; the navigation reflows; the form grids reduce to single-column under 600px.
-- **Accessibility:** Semantic HTML (`<header>`, `<main>`, `<section>`, `<aside>`, `<dl>`), labeled form fields, ARIA roles on the modal and toast region, focus-visible rings, and an Escape-to-close pattern on dialogs.
+The visual direction is deliberately *not* a generic dashboard look. The palette is warm cream (`#f4ede0`) with a deep oxblood accent (`#7a2e2e`), pulling from the aesthetic of physical archives and library card catalogs. Typography pairs **Fraunces** (display serif) with **IBM Plex Sans** (body) and **IBM Plex Mono** (used for ISBNs and metadata). Radii are tight (2–6px) and shadows are subtle — the goal was institutional, not playful.
 
-## Deployment
+Layout is responsive: navigation collapses and catalog rows convert to stacked cards below 720px.
 
-This is a pure static site. To deploy to GitHub Pages:
+## Seed data
 
-1. Push the `library-system/` contents to the root of a GitHub repository.
-2. In the repo settings, enable Pages and point it at the `main` branch root.
-3. Visit `https://<your-username>.github.io/<repo-name>/login.html` (or `index.html` — it'll redirect to login).
+The seeded catalog contains 25 books spanning fiction, sci-fi, fantasy, biography, philosophy, history, business, and more. Four are pre-checked-out — two overdue, two due-soon — so the dashboard reminders display real content from the moment you log in as admin.
 
-To run locally, just open `login.html` directly in a browser, or serve the folder with any static server:
+A "Reset demo data" link at the bottom of the dashboard restores the seed at any time.
+
+## Known limitations
+
+- Auth is mocked entirely client-side; this is not a real authentication system.
+- Data is per-browser; clearing site data resets everything.
+- Single-user assumption — no concurrency handling, no conflict resolution.
+- Web fonts load from the Google Fonts CDN; the font stack falls back gracefully if the CDN is blocked.
+
+## Running locally
+
+Any static file server will do. From the project root:
 
 ```bash
 python3 -m http.server 8000
-# then visit http://localhost:8000/login.html
 ```
 
-## Browser support
-
-Modern evergreen browsers (Chrome, Firefox, Safari, Edge). Uses no transpilation; relies on standard ES2017+ features (template literals, spread, async/await, optional chaining).
+Then visit `http://localhost:8000`.
