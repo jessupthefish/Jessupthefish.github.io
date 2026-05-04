@@ -1,0 +1,259 @@
+/* ============================================================
+   base.css — Foundations
+   CSS custom properties (design tokens), modest reset, base
+   typography, and page-frame layout. The aesthetic target is
+   an institutional public-library catalog: warm paper-cream
+   background, deep oxblood as the single accent color, refined
+   serif headings paired with a humanist sans body face.
+   ============================================================ */
+
+/* ---- Design tokens -------------------------------------- */
+:root {
+  /* Surfaces — warm cream paper feel */
+  --color-bg:           #f4ede0;
+  --color-bg-deep:      #ebe2cf;
+  --color-card:         #ffffff;
+  --color-card-alt:     #faf6ed;
+
+  /* Text */
+  --color-text:         #1a1612;
+  --color-text-muted:   #6b6359;
+  --color-text-subtle:  #908778;
+
+  /* Borders & dividers */
+  --color-border:       #d8cdb6;
+  --color-border-strong:#b8a98d;
+
+  /* Brand & accents — institutional oxblood */
+  --color-accent:       #7a2e2e;
+  --color-accent-hover: #5e2222;
+  --color-accent-soft:  #ede0e0;
+
+  /* Status colors — muted, not garish */
+  --color-success:      #4a6741;
+  --color-success-soft: #e2e9d8;
+  --color-warning:      #8a5a1a;
+  --color-warning-soft: #f4ead4;
+  --color-danger:       #8a2a2a;
+  --color-danger-soft:  #f1dada;
+  --color-info:         #3d5566;
+  --color-info-soft:    #dde6ee;
+
+  /* Type scale */
+  --font-display: 'Fraunces', 'Source Serif Pro', Georgia, serif;
+  --font-body:    'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Spacing scale (rem) */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  4rem;
+
+  /* Radii — kept tight for institutional feel */
+  --radius-sm:  2px;
+  --radius-md:  4px;
+  --radius-lg:  6px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 2px rgba(40, 28, 14, 0.06);
+  --shadow-md:  0 2px 6px rgba(40, 28, 14, 0.08), 0 1px 2px rgba(40, 28, 14, 0.04);
+  --shadow-lg:  0 12px 32px rgba(40, 28, 14, 0.18), 0 2px 8px rgba(40, 28, 14, 0.08);
+
+  /* Transitions */
+  --t-fast: 120ms ease;
+  --t-base: 200ms ease;
+}
+
+/* ---- Reset --------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, figure, blockquote {
+  margin: 0;
+}
+ul, ol { padding: 0; list-style: none; }
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { background: none; border: 0; cursor: pointer; }
+a { color: inherit; }
+
+/* ---- Base typography ----------------------------------- */
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Subtle paper texture via layered gradient noise.
+     Two near-transparent radial gradients give the cream
+     surface a hint of variation without being busy. */
+  background-image:
+    radial-gradient(at 18% 12%, rgba(122, 46, 46, 0.04) 0, transparent 35%),
+    radial-gradient(at 82% 88%, rgba(60, 40, 20, 0.05) 0, transparent 40%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+h1 {
+  font-size: clamp(1.75rem, 2.5vw + 1rem, 2.5rem);
+  line-height: 1.1;
+  font-variation-settings: 'opsz' 144, 'SOFT' 30;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-variation-settings: 'opsz' 100;
+}
+
+h3 {
+  font-size: 1.125rem;
+  line-height: 1.3;
+}
+
+p { color: var(--color-text); }
+
+a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: color var(--t-fast);
+}
+a:hover { color: var(--color-accent-hover); }
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Focus outline (accessibility) --------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ---- Page frame ---------------------------------------- */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page__main {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5);
+}
+
+.page__footer {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.page__footer a {
+  color: var(--color-text-subtle);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+}
+
+/* ---- Page header section (within .page__main) ---------- */
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--space-5);
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-header__title { margin-bottom: var(--space-1); }
+
+.page-header__eyebrow {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-2);
+}
+
+.page-header__sub {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  max-width: 60ch;
+}
+
+.page-header__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+/* ---- Section spacing ----------------------------------- */
+.section + .section { margin-top: var(--space-7); }
+
+.section__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+/* ---- Utility classes ----------------------------------- */
+.muted   { color: var(--color-text-muted); }
+.subtle  { color: var(--color-text-subtle); }
+.center  { text-align: center; }
+.hidden  { display: none !important; }
+
+/* "Eyebrow" small label above headings — small caps treatment. */
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+/* Responsive page padding */
+@media (max-width: 720px) {
+  .page__main { padding: var(--space-5) var(--space-4); }
+  h1 { font-size: 1.75rem; }
+}

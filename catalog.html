@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catalog — Meridian Public Library</title>
+  <meta name="description" content="Browse, search, and manage the library collection." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,500..600;9..144,400..500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="nav" data-nav data-current="catalog"></header>
+
+    <main class="page__main">
+      <section class="page-header">
+        <div>
+          <div class="page-header__eyebrow">Collection</div>
+          <h1 class="page-header__title">Catalog</h1>
+          <p class="page-header__sub">
+            Search by title, author, or ISBN. Filter by genre or availability.
+            Click any row for full record details.
+          </p>
+        </div>
+        <div class="page-header__actions">
+          <button id="catalog-add-btn" class="btn btn--primary hidden">+ Add new book</button>
+        </div>
+      </section>
+
+      <!-- Filters & search toolbar -->
+      <div class="toolbar" role="search" aria-label="Catalog filters">
+        <div class="field toolbar__search">
+          <label class="field__label" for="filter-search">Search</label>
+          <input type="search" id="filter-search" placeholder="Title, author, or ISBN…" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label class="field__label" for="filter-genre">Genre</label>
+          <select id="filter-genre"></select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="filter-availability">Availability</label>
+          <select id="filter-availability">
+            <option value="all">All books</option>
+            <option value="available">Available only</option>
+            <option value="checked-out">Checked out</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field__label" for="filter-sort">Sort</label>
+          <select id="filter-sort">
+            <option value="title-asc">Title (A–Z)</option>
+            <option value="title-desc">Title (Z–A)</option>
+            <option value="author">Author</option>
+            <option value="year-desc">Newest first</option>
+            <option value="year-asc">Oldest first</option>
+            <option value="recent">Recently added</option>
+          </select>
+        </div>
+        <div class="toolbar__count" id="catalog-count" aria-live="polite"></div>
+      </div>
+
+      <!-- Catalog table -->
+      <div class="table-wrap">
+        <table class="table" aria-label="Library catalog">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Author</th>
+              <th scope="col">Genre</th>
+              <th scope="col">Year</th>
+              <th scope="col">Status</th>
+              <th scope="col" style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="catalog-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Add book section (admin only, hidden by default) -->
+      <section id="add-book-section" class="section hidden" aria-labelledby="add-book-title">
+        <div class="card card--feature card--padded">
+          <h2 id="add-book-title" class="section__title" style="margin-bottom:.5rem;">Add new book</h2>
+          <p class="muted" style="margin-bottom:1.5rem;">
+            All fields are required. The book will be added to the catalog immediately.
+          </p>
+          <form id="add-book-form" novalidate>
+            <div class="form-grid">
+              <div class="field" data-field="title">
+                <label class="field__label" for="book-title">Title</label>
+                <input type="text" id="book-title" name="title" required maxlength="200" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="author">
+                <label class="field__label" for="book-author">Author</label>
+                <input type="text" id="book-author" name="author" required maxlength="120" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="isbn">
+                <label class="field__label" for="book-isbn">ISBN</label>
+                <input type="text" id="book-isbn" name="isbn" required pattern="[\d\-xX]{10,17}" placeholder="978-…" />
+                <span class="field__hint">10 or 13 digits, hyphens optional.</span>
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="genre">
+                <label class="field__label" for="book-genre">Genre</label>
+                <select id="book-genre" name="genre" required></select>
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="year">
+                <label class="field__label" for="book-year">Publication year</label>
+                <input type="number" id="book-year" name="year" required min="1" max="2100" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="available">
+                <label class="field__label">Availability</label>
+                <div class="checkbox-row">
+                  <input type="checkbox" id="book-available" name="available" checked />
+                  <label for="book-available">Available for borrowing</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="cancel-add" class="btn btn--ghost">Cancel</button>
+              <button type="submit" class="btn btn--primary">Add to catalog</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page__footer">
+      Meridian Public Library · Catalog System v1.0
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>

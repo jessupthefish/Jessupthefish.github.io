@@ -1,0 +1,188 @@
+/* ============================================================
+   layout.css — Structural layout
+   The top nav and grid systems used across pages.
+   ============================================================ */
+
+/* ---- Top navigation ------------------------------------ */
+.nav {
+  background-color: var(--color-card);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  /* A subtle hairline shadow when scrolled — kept restrained. */
+  box-shadow: var(--shadow-sm);
+}
+
+.nav__inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+/* Brand mark — a serif initial in a small bordered square,
+   reminiscent of a library bookplate. */
+.nav__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.nav__brand-mark {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-variation-settings: 'opsz' 144;
+  background-color: var(--color-accent);
+  color: var(--color-card);
+  border-radius: var(--radius-sm);
+  letter-spacing: 0;
+}
+
+.nav__brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.nav__brand-name {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.nav__brand-sub {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+  margin-top: 4px;
+}
+
+.nav__links {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: var(--space-4);
+}
+
+.nav__link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transition: color var(--t-fast), background var(--t-fast);
+  position: relative;
+}
+
+.nav__link:hover {
+  color: var(--color-text);
+  background-color: var(--color-card-alt);
+}
+
+.nav__link--active {
+  color: var(--color-text);
+}
+
+.nav__link--active::after {
+  content: '';
+  position: absolute;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: -1px;
+  height: 2px;
+  background-color: var(--color-accent);
+}
+
+/* Right-hand user block */
+.nav__user {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.nav__user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.1;
+}
+
+.nav__user-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.nav__user-role {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.nav__user-role--admin {
+  color: var(--color-accent);
+  background-color: var(--color-accent-soft);
+}
+
+.nav__user-role--patron {
+  color: var(--color-info);
+  background-color: var(--color-info-soft);
+}
+
+/* Mobile — collapse nav into vertical stack */
+@media (max-width: 720px) {
+  .nav__inner {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+  .nav__links {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-2);
+  }
+  .nav__user { margin-left: auto; }
+  .nav__user-info { display: none; }
+  .nav__brand-sub { display: none; }
+}
+
+/* ---- Grid systems -------------------------------------- */
+.grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.grid--stats {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.grid--two-col {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .grid--two-col { grid-template-columns: 1fr; }
+}

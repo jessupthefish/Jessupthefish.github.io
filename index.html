@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Meridian Public Library</title>
+  <meta name="description" content="Library catalog dashboard. View collection statistics and upcoming due dates." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,500..600;9..144,400..500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="page">
+    <!-- Shared nav is injected by js/nav.js -->
+    <header class="nav" data-nav data-current="dashboard"></header>
+
+    <main class="page__main">
+      <section class="page-header">
+        <div>
+          <div class="page-header__eyebrow">Dashboard</div>
+          <h1 class="page-header__title" id="dash-greeting">Welcome.</h1>
+          <p class="page-header__sub" id="dash-sub"></p>
+        </div>
+        <div class="page-header__actions">
+          <a class="btn btn--primary" href="catalog.html">Browse catalog</a>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="stats-title">
+        <h2 id="stats-title" class="eyebrow" style="margin-bottom:1rem;">Collection at a glance</h2>
+        <div id="dash-stats" class="grid grid--stats" role="list"></div>
+      </section>
+
+      <section class="section" aria-labelledby="dash-reminders-title">
+        <div class="card">
+          <div class="section__head" style="margin: 0 0 1rem 0; padding-bottom: .75rem;">
+            <h2 class="section__title" id="dash-reminders-title">Reminders</h2>
+            <a href="catalog.html" class="muted" style="font-size:.875rem;">View full catalog →</a>
+          </div>
+          <div id="dash-reminders" class="reminder-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page__footer">
+      Meridian Public Library · Catalog System v1.0 ·
+      <a href="#" id="reset-data">Reset demo data</a>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    // Footer "reset" link — useful for demos.
+    document.addEventListener('DOMContentLoaded', () => {
+      const link = document.getElementById('reset-data');
+      if (!link) return;
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const ok = await window.UI.confirmDialog({
+          title: 'Reset all data?',
+          message: 'This will discard any books you have added or edited and restore the original 25-book demonstration set.',
+          confirmText: 'Reset',
+          cancelText: 'Cancel',
+          danger: true
+        });
+        if (!ok) return;
+        window.LibraryStore.reset();
+        window.UI.toast('Demo data restored.', 'success');
+        setTimeout(() => window.location.reload(), 600);
+      });
+    });
+  </script>
+</body>
+</html>

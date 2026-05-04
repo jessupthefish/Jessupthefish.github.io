@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in — Meridian Public Library</title>
+  <meta name="description" content="Sign in to the Meridian Public Library catalog system." />
+
+  <!-- Distinctive type pairing: Fraunces (display serif) + IBM Plex Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,500..600;9..144,400..500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="page">
+    <main class="login-shell">
+      <section class="login-card" aria-labelledby="login-title">
+        <div class="login-card__brand">
+          <div class="login-card__brand-mark" aria-hidden="true">M</div>
+          <div>
+            <div class="login-card__name">Meridian</div>
+            <div class="login-card__sub">Public Library</div>
+          </div>
+        </div>
+
+        <h1 id="login-title" style="font-size:1.25rem;text-align:center;margin-bottom:1.5rem;">
+          Sign in to your account
+        </h1>
+
+        <form id="login-form" novalidate>
+          <div class="field" style="margin-bottom: 1rem;">
+            <label class="field__label" for="login-username">Username</label>
+            <input type="text" id="login-username" name="username" autocomplete="username" required />
+          </div>
+
+          <div class="field" style="margin-bottom: 1.25rem;">
+            <label class="field__label" for="login-password">Password</label>
+            <input type="password" id="login-password" name="password" autocomplete="current-password" required />
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">Sign in</button>
+
+          <div id="login-error" class="login-error hidden" role="alert"></div>
+        </form>
+
+        <div class="login-card__demo" aria-label="Demo credentials">
+          <strong>Demonstration accounts</strong>
+          <div data-fill="admin:admin123" style="margin-bottom:.4rem;">
+            <span class="creds">admin / admin123</span>
+            <span class="muted"> · Head Librarian</span>
+          </div>
+          <div data-fill="patron:patron123">
+            <span class="creds">patron / patron123</span>
+            <span class="muted"> · Library Member</span>
+          </div>
+          <p class="subtle" style="margin-top:.6rem;font-size:.7rem;">
+            Click a row to autofill — this is a demo system.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page__footer">
+      Meridian Public Library · Catalog System v1.0
+    </footer>
+  </div>
+
+  <!-- Scripts: data first, then services, then page logic -->
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

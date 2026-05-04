@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Book — Meridian Public Library</title>
+  <meta name="description" content="View book details and manage borrowing." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,500;9..144,500..600;9..144,400..500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="nav" data-nav data-current="catalog"></header>
+
+    <main class="page__main">
+      <p style="margin-bottom: 1.5rem; font-size: .875rem;">
+        <a href="catalog.html" style="color: var(--color-text-muted); text-decoration: none;">
+          ← Back to catalog
+        </a>
+      </p>
+
+      <!-- Not-found view -->
+      <section id="book-not-found" class="card card--padded center hidden" style="max-width: 520px; margin: 4rem auto;">
+        <h1 style="margin-bottom: .5rem;">Book not found</h1>
+        <p class="muted" style="margin-bottom: 1.5rem;">
+          We couldn't find a book matching that ID. It may have been deleted.
+        </p>
+        <a href="catalog.html" class="btn btn--primary">Return to catalog</a>
+      </section>
+
+      <!-- Detail view -->
+      <section id="book-view" aria-labelledby="view-title">
+        <header class="book-detail__top">
+          <div>
+            <div class="page-header__eyebrow">Catalog record</div>
+            <h1 class="book-detail__title" id="view-title"></h1>
+            <p class="book-detail__author" id="view-author"></p>
+          </div>
+          <div class="book-detail__actions" id="view-actions"></div>
+        </header>
+
+        <div class="grid grid--two-col">
+          <div class="card card--padded">
+            <h2 class="eyebrow" style="margin-bottom: 1.25rem;">Bibliographic details</h2>
+            <dl class="dl-grid">
+              <div>
+                <dt>Genre</dt>
+                <dd id="view-genre"></dd>
+              </div>
+              <div>
+                <dt>Publication year</dt>
+                <dd id="view-year"></dd>
+              </div>
+              <div>
+                <dt>ISBN</dt>
+                <dd id="view-isbn" class="mono"></dd>
+              </div>
+              <div>
+                <dt>Added to catalog</dt>
+                <dd id="view-added"></dd>
+              </div>
+            </dl>
+          </div>
+
+          <aside class="card card--padded">
+            <h2 class="eyebrow" style="margin-bottom: 1.25rem;">Loan status</h2>
+            <div style="margin-bottom: 1rem;" id="view-status"></div>
+
+            <dl class="dl-grid hidden" id="view-loan-row">
+              <div>
+                <dt>Borrowed by</dt>
+                <dd id="view-borrower"></dd>
+              </div>
+              <div>
+                <dt>Due date</dt>
+                <dd id="view-due"></dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Edit form (admin only, toggled via "Edit details" button) -->
+      <section id="book-edit" class="hidden" aria-labelledby="edit-title">
+        <div class="card card--feature card--padded">
+          <h2 id="edit-title" class="section__title" style="margin-bottom: .5rem;">Edit book</h2>
+          <p class="muted" style="margin-bottom: 1.5rem;">
+            Update any field below. Changes are saved immediately.
+          </p>
+
+          <form id="edit-form" novalidate>
+            <div class="form-grid">
+              <div class="field" data-field="title">
+                <label class="field__label" for="edit-title-input">Title</label>
+                <input type="text" id="edit-title-input" name="title" required maxlength="200" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="author">
+                <label class="field__label" for="edit-author">Author</label>
+                <input type="text" id="edit-author" name="author" required maxlength="120" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="isbn">
+                <label class="field__label" for="edit-isbn">ISBN</label>
+                <input type="text" id="edit-isbn" name="isbn" required pattern="[\d\-xX]{10,17}" />
+                <span class="field__hint">10 or 13 digits, hyphens optional.</span>
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="genre">
+                <label class="field__label" for="edit-genre">Genre</label>
+                <select id="edit-genre" name="genre" required></select>
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="year">
+                <label class="field__label" for="edit-year">Publication year</label>
+                <input type="number" id="edit-year" name="year" required min="1" max="2100" />
+                <span class="field__error"></span>
+              </div>
+
+              <div class="field" data-field="available">
+                <label class="field__label">Availability</label>
+                <div class="checkbox-row">
+                  <input type="checkbox" id="edit-available" name="available" />
+                  <label for="edit-available">Available for borrowing</label>
+                </div>
+                <span class="field__hint" id="edit-available-hint"></span>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="cancel-edit" class="btn btn--ghost">Cancel</button>
+              <button type="submit" class="btn btn--primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page__footer">
+      Meridian Public Library · Catalog System v1.0
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>
