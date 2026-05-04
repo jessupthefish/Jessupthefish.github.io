@@ -2,7 +2,7 @@
    auth.js — AuthService
    Mock authentication. Credentials are hardcoded in data.js
    (SEED_USERS). Session is held in sessionStorage so it clears
-   when the browser closes — a sensible default for a public-
+   when the browser closes — a sensible default for a shared
    library workstation. Demo only — never use this pattern for
    real authentication.
    ============================================================ */

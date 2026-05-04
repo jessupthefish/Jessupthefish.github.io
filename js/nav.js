@@ -47,11 +47,11 @@
 
     mount.innerHTML = `
       <div class="nav__inner">
-        <a class="nav__brand" href="index.html" aria-label="Meridian Public Library home">
+        <a class="nav__brand" href="index.html" aria-label="Meridian Library home">
           <span class="nav__brand-mark" aria-hidden="true">M</span>
           <span class="nav__brand-text">
             <span class="nav__brand-name">Meridian</span>
-            <span class="nav__brand-sub">Public Library</span>
+            <span class="nav__brand-sub">Library</span>
           </span>
         </a>
         <nav class="nav__links" aria-label="Primary">

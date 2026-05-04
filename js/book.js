@@ -43,7 +43,7 @@
   function renderView() {
     document.getElementById('book-view').classList.remove('hidden');
     document.getElementById('book-edit').classList.add('hidden');
-    document.title = `${book.title} — Meridian Public Library`;
+    document.title = `${book.title} — Meridian Library`;
 
     document.getElementById('view-title').textContent = book.title;
 
