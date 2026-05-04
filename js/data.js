@@ -36,8 +36,8 @@ window.SEED_BOOKS = [
 /* Mock user accounts — for demonstration only.
    In a real app, never store credentials in client-side code. */
 window.SEED_USERS = [
-  { username: 'admin',  password: 'admin123',  role: 'admin',  displayName: 'Eleanor Whitfield', title: 'Head Librarian' },
-  { username: 'patron', password: 'patron123', role: 'patron', displayName: 'Marcus Chen',       title: 'Library Member' }
+  { username: 'admin',  password: 'admin123',  role: 'admin',  displayName: 'Admin', title: 'Head Librarian' },
+  { username: 'patron', password: 'patron123', role: 'patron', displayName: 'User',       title: 'Library Member' }
 ];
 
 /* The complete list of genres used in the catalog. Used to populate
